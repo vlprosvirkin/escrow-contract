@@ -50,17 +50,19 @@ function App() {
 
   async function newContract() {
     const beneficiary = document.getElementById('beneficiary').value;
-    const arbiter = document.getElementById('arbiter').value;
+    const arbiter1 = document.getElementById('arbiter1').value;
+    const arbiter2 = document.getElementById('arbiter2').value;
 
     // get value from textBox to convert to wei
     const textBoxValue = document.getElementById('ethValue').value;
     const value = ethers.utils.parseEther(textBoxValue);
 
-    const escrowContract = await deploy(signer, arbiter, beneficiary, value);
+    const escrowContract = await deploy(signer, arbiter1, arbiter2, beneficiary, value);
 
     const escrow = {
       address: escrowContract.address,
-      arbiter,
+      arbiter1,
+      arbiter2,
       beneficiary,
       value: value.toString(),
       handleApprove: async () => {
@@ -86,13 +88,15 @@ function App() {
     console.log('balance:', balance);
     const formattedBalance = ethers.utils.formatEther(balance);
     console.log('formattedBalance', formattedBalance);
-    const arbiter = await escrowContract.arbiter();
+    const arbiter1 = await escrowContract.arbiter1();
+    const arbiter2 = await escrowContract.arbiter2();
     const beneficiary = await escrowContract.beneficiary();
-    console.log('arbiter, beneficiary', arbiter, beneficiary);
+    console.log('arbiter, beneficiary', arbiter1, arbiter2, beneficiary);
 
     const escrow = {
       address: escrowContract.address,
-      arbiter: arbiter,
+      arbiter1: arbiter1,
+      arbiter2: arbiter2,
       beneficiary: beneficiary,
       value: formattedBalance,
       handleApprove: async () => {
@@ -120,8 +124,13 @@ function App() {
         </label>
         
         <label>
-          Arbiter Address
-          <input type="text" id="arbiter" />
+          Arbiter1 Address
+          <input type="text" id="arbiter1" />
+        </label>
+
+        <label>
+          Arbiter2 Address
+          <input type="text" id="arbiter2" />
         </label>
 
         <label>
